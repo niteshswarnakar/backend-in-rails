@@ -1,4 +1,6 @@
 class Api::V1::AuthController < ApplicationController
+  skip_before_action :authenticate_request, only: [ :signin ]
+
   def signin
     user = User.find_by(email: auth_params[:email])
 
