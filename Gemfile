@@ -17,11 +17,6 @@ gem "jwt"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
-
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -40,6 +35,9 @@ gem "image_processing", "~> 1.2"
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Loads environment variables from .env into ENV [https://github.com/bkeepers/dotenv]
+  gem "dotenv-rails"
 
   # RSpec testing framework for Rails [https://github.com/rspec/rspec-rails]
   gem "rspec-rails", "~> 7.1"
