@@ -23,7 +23,7 @@ class Api::V1::ContentsController < ApplicationController
     if content.save
       render json: ContentSerializer.new(content).as_json, status: :created
     else
-      render json: { errors: content.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: content.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -31,7 +31,7 @@ class Api::V1::ContentsController < ApplicationController
     if @content.update(content_params)
       render json: ContentSerializer.new(@content).as_json, status: :ok
     else
-      render json: { errors: @content.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @content.errors.full_messages }, status: :unprocessable_content
     end
   end
 

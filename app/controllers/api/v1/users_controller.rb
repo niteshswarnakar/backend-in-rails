@@ -7,7 +7,7 @@ class Api::V1::UsersController < ApplicationController
       token = JwtToken.encode(user_id: user.id)
       render json: UserSerializer.new(user, token).as_json, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
     end
   end
 
