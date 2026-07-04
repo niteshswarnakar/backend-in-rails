@@ -8,6 +8,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "users/signup", to: "users#create"
       post "auth/signin",  to: "auth#signin"
+      resources :contents, only: [ :index, :show, :create, :update, :destroy ] do
+        collection do
+          get :mine
+        end
+      end
     end
   end
 

@@ -14,8 +14,8 @@ class UserSerializer
           email: @user.email,
           name: "#{@user.first_name} #{@user.last_name}",
           country: @user.country,
-          created_at: @user.created_at,
-          updated_at: @user.updated_at
+          createdAt: @user.created_at,
+          updatedAt: @user.updated_at
         }
       }
     }
