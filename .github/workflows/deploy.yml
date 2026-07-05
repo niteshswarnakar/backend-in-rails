@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # Build the exact commit that passed CI, not the branch tip.
           ref: ${{ github.event.workflow_run.head_sha }}
