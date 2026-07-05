@@ -6,7 +6,12 @@ class User < ApplicationRecord
   validates :email, presence: true,
             uniqueness: { case_sensitive: false },
             format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, length: { minimum: 6 }, allow_nil: true
+  validates :password,
+            format: {
+              with: /\A(?=.*[A-Z])(?=.*\d)(?=.*[@#$%&]).{6,}\z/,
+              message: "must be at least 6 characters and include an uppercase letter, a number, and a symbol (@#$%&)"
+            },
+            allow_nil: true
 
   before_validation :assign_uuid
 
