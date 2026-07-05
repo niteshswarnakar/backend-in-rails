@@ -1,20 +1,32 @@
 name: Build and Push Image
 
+# Run only after the "CI" workflow completes on main.
 on:
-  push:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    # Deploy only if the CI run succeeded (skip on failure/cancellation).
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Build the exact commit that passed CI, not the branch tip.
+          ref: ${{ github.event.workflow_run.head_sha }}
 
-      - name: Check Docker Hub secrets
+      - name: Check required secrets
         run: |
           if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] || [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
             echo "ERROR: DOCKERHUB_USERNAME or DOCKERHUB_TOKEN not set. Add them in Settings -> Secrets and variables -> Actions." >&2
+            exit 1
+          fi
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "ERROR: RENDER_DEPLOY_HOOK not set. Add it in Settings -> Secrets and variables -> Actions." >&2
             exit 1
           fi
 
@@ -35,6 +47,9 @@ jobs:
           platforms: linux/amd64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/backend-in-rails:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/backend-in-rails:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend-in-rails:${{ github.event.workflow_run.head_sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trigger Render deploy
+        run: curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
